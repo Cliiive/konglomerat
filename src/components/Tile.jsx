@@ -8,7 +8,6 @@ const Tile = ({ id, emoji }) => {
     roomOne.send({
       type: "broadcast",
       event: "emojis",
-      payload: { message: id, timestamp: Date.now() },
       payload: {
         message: id,
         timestamp: new Date().toLocaleString(),
@@ -28,7 +27,6 @@ const Tile = ({ id, emoji }) => {
       id={id}
       className="container"
       onClick={handleTap}
-      onTouchStart={handleTap}
     >
       <div className="p-10 flex justify-center items-center">
         <Emoji name={emoji} style={{ width: "48px", height: "48px" }} />
