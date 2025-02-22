@@ -3,8 +3,8 @@ import socket
 from supabase import acreate_client, Client
 
 # Supabase credentials
-url: str = ''
-key: str = ''
+url: str = 'https://konmiupcnchfvhamodqt.supabase.co'
+key: str = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtvbm1pdXBjbmNoZnZoYW1vZHF0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzUzMzc5NzMsImV4cCI6MjA1MDkxMzk3M30.mtA7XLQOk0gga0i27gnoCD9iEOVgcHYtUeWjgI9wyHk'
 
 # Target localhost and port
 HOST = "127.0.0.1"
@@ -22,9 +22,12 @@ def send_to_localhost(payload):
 
 async def main():
     supabase: Client = await acreate_client(url, key)
+    counter = 0
 
     def my_callback(payload):
-        # Extract the data from the payload
+        nonlocal counter
+        counter += 1
+        payload['counter'] = counter
         print(f"Received payload: {payload}")
         
         # Send payload to localhost

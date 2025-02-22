@@ -18,3 +18,22 @@ body {
   @apply p-2 border border-gray-300 rounded-lg;
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
+
+.emoji {
+  font-size: 40px;
+}
+@media (min-width: 640px) {
+  .emoji {
+    font-size: 100px;
+  }
+}
+@media (min-width: 768px) {
+  .emoji {
+    font-size: 100px;
+  }
+}
+@media (min-width: 1024px) {
+  .emoji {
+    font-size: 150px;
+  }
+}

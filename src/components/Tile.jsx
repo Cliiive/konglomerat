@@ -1,5 +1,4 @@
 import React from "react";
-import { Emoji } from "react-apple-emojis";
 import { createClient } from "@supabase/supabase-js";
 import { supabase, roomOne } from "../supabaseClient";
 
@@ -23,16 +22,32 @@ const Tile = ({ id, emoji }) => {
   };
 
   return (
-    <div
-      id={id}
-      className="container"
-      onClick={handleTap}
-    >
+    <div id={id} className="container" onClick={handleTap}>
       <div className="p-10 flex justify-center items-center">
-        <Emoji name={emoji} style={{ width: "48px", height: "48px" }} />
+        <span className="emoji">{emoji}</span>
       </div>
     </div>
   );
 };
+
+// Add the following CSS to your stylesheet or in a style tag
+// .emoji {
+//   font-size: 100px;
+// }
+// @media (min-width: 640px) {
+//   .emoji {
+//     font-size: 150px;
+//   }
+// }
+// @media (min-width: 768px) {
+//   .emoji {
+//     font-size: 200px;
+//   }
+// }
+// @media (min-width: 1024px) {
+//   .emoji {
+//     font-size: 250px;
+//   }
+// }
 
 export default Tile;
