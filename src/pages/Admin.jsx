@@ -5,7 +5,6 @@ const EmojiManager = ({ emojis }) => {
   const [localEmojis, setLocalEmojis] = useState(emojis);
 
   const handleToggleEmoji = async (id, currentState) => {
-
     const { error } = await supabase
       .from("Emojis_Data")
       .update({ active: !currentState })
@@ -13,16 +12,16 @@ const EmojiManager = ({ emojis }) => {
 
     if (error) {
       console.error("Error updating emoji state:", error);
-      // Revert the local state if the update fails
-      setLocalEmojis((prevEmojis) =>
-        prevEmojis.map((emoji) =>
+      // Revert state if update fails
+      setLocalEmojis((prev) =>
+        prev.map((emoji) =>
           emoji.id === id ? { ...emoji, active: currentState } : emoji
         )
       );
     } else {
-        console.log("Emoji state updated successfully:", id);
-      setLocalEmojis((prevEmojis) =>
-        prevEmojis.map((emoji) =>
+      console.log("Emoji state updated successfully:", id);
+      setLocalEmojis((prev) =>
+        prev.map((emoji) =>
           emoji.id === id ? { ...emoji, active: !currentState } : emoji
         )
       );
