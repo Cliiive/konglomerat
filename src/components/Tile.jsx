@@ -7,6 +7,7 @@ const Tile = ({ id, emoji }) => {
   const [isClosing, setIsClosing] = useState(false);
 
   const handleTap = () => {
+    if (navigator.vibrate) navigator.vibrate(50); // Haptic feedback on tap
     setIsDialogOpen(true);
     setIsClosing(false);
   };
@@ -30,6 +31,7 @@ const Tile = ({ id, emoji }) => {
       });
     } else {
       console.log("Data inserted successfully:", data);
+      if (navigator.vibrate) navigator.vibrate([100, 50, 100]); // Haptic feedback on success
       toast.success("Deine Reaktion ist angekommen!", {
         position: "top-right",
         autoClose: 2000,
