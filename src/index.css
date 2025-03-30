@@ -3,24 +3,25 @@
 @tailwind utilities;
 
 body {
-  @apply bg-abbey-900;
+  @apply bg-black text-gray-200;
 }
 
 .container {
-  @apply bg-abbey-500 sm:p-10 lg:p-20 rounded-lg shadow-lg text-center transition-transform duration-300 hover:scale-105 hover:shadow-2xl;
+  @apply bg-gray-800 sm:p-10 lg:p-20 rounded-lg shadow-lg text-center transition-transform duration-300 hover:scale-105 hover:shadow-2xl;
 }
 
 .button {
-  @apply p-2.5 ml-4 bg-abbey-500 rounded-lg shadow-lg hover:scale-105 hover:shadow-2xl text-abbey-50;
+  @apply p-2.5 ml-4 bg-gray-700 rounded-lg shadow-lg hover:scale-105 hover:shadow-2xl text-gray-200;
 }
 
 .input-text {
-  @apply p-2 border border-gray-300 rounded-lg;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+  @apply p-2 border border-gray-600 rounded-lg bg-gray-800 text-gray-200;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .emoji {
-  font-size: 40px;
+  font-size: 30px;
+  color: #ffffff;
 }
 @media (min-width: 640px) {
   .emoji {
@@ -36,4 +37,68 @@ body {
   .emoji {
     font-size: 150px;
   }
+}
+
+@keyframes bounce {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-bounce {
+  animation: bounce 0.2s ease-out forwards;
+}
+
+@keyframes close {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+}
+
+.animate-close {
+  animation: close 0.2s ease-out forwards;
+}
+
+.dialog-overlay {
+  @apply fixed inset-0 flex items-center justify-center z-50;
+  background-color: rgba(0, 0, 0, 0);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.dialog-overlay-open {
+  background-color: rgba(0, 0, 0, 0.8); /* Darker overlay */
+}
+
+.bg-abbey-900 {
+  background-color: #121212; /* Dark black */
+}
+
+.bg-abbey-800 {
+  background-color: #1a1a1a; /* Slightly lighter black */
+}
+
+.bg-abbey-500 {
+  background-color: #2a2a2a; /* Dark gray */
+}
+
+.text-abbey-200 {
+  color: #e0e0e0; /* Light gray */
 }

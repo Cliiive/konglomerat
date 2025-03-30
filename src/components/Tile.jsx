@@ -1,9 +1,17 @@
-import React from "react";
-import { createClient } from "@supabase/supabase-js";
+import React, { useState } from "react";
 import { supabase, roomOne } from "../supabaseClient";
+import { toast } from "react-toastify";
 
 const Tile = ({ id, emoji }) => {
-  const handleTap = async () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+
+  const handleTap = () => {
+    setIsDialogOpen(true);
+    setIsClosing(false);
+  };
+
+  const handleReact = async () => {
     roomOne.send({
       type: "broadcast",
       event: "emojis",
@@ -16,38 +24,60 @@ const Tile = ({ id, emoji }) => {
 
     if (error) {
       console.error("Error inserting data:", error);
+      toast.error("Da ging leider was schief, versuchs gleich nochmal!", {
+        position: "top-right",
+        autoClose: 2000,
+      });
     } else {
       console.log("Data inserted successfully:", data);
+      toast.success("Deine Reaktion ist angekommen!", {
+        position: "top-right",
+        autoClose: 2000,
+      });
+    }
+    handleCloseAnimation();
+  };
+
+  const handleCloseAnimation = () => {
+    setIsClosing(true);
+    setTimeout(() => setIsDialogOpen(false), 200); // Match animation duration
+  };
+
+  const handleClose = (e) => {
+    if (e.target.id === "dialog-overlay") {
+      handleCloseAnimation();
     }
   };
 
   return (
-    <div id={id} className="container" onClick={handleTap}>
-      <div className="p-10 flex justify-center items-center">
+    <>
+      <div className="p-3 flex justify-center items-center" onClick={handleTap}>
         <span className="emoji">{emoji}</span>
       </div>
-    </div>
+      {isDialogOpen && (
+        <div
+          id="dialog-overlay"
+          className={`dialog-overlay ${isClosing ? "" : "dialog-overlay-open"}`}
+          onClick={handleClose}
+        >
+          <div
+            className={`bg-gray-800 p-6 rounded-lg shadow-lg text-center transform transition-transform duration-300 ${
+              isClosing ? "animate-close" : "animate-bounce"
+            }`}
+            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the dialog
+          >
+            <div className="text-8xl mb-4 text-gray-200">{emoji}</div>
+            <button
+              className="bg-gray-700 text-gray-200 px-4 py-2 m-2 rounded-lg mb-4 p-4 font-bold hover:bg-gray-600"
+              onClick={handleReact}
+            >
+              REACT!
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
-
-// Add the following CSS to your stylesheet or in a style tag
-// .emoji {
-//   font-size: 100px;
-// }
-// @media (min-width: 640px) {
-//   .emoji {
-//     font-size: 150px;
-//   }
-// }
-// @media (min-width: 768px) {
-//   .emoji {
-//     font-size: 200px;
-//   }
-// }
-// @media (min-width: 1024px) {
-//   .emoji {
-//     font-size: 250px;
-//   }
-// }
 
 export default Tile;
