@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import useCSV from "./hooks/useCSV";
+import { useCSV, useAdminEmojis } from "./hooks/useCSV";
 import Grid from "./components/Grid";
 import Admin from "./pages/Admin";
 import { ToastContainer } from "react-toastify";
@@ -8,6 +8,8 @@ import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   const emojis = useCSV();
+  const adminEmojis = useAdminEmojis();
+
   return (
     <Router basename="/konglomerat">
       <div className="bg-black flex flex-col items-center justify-center min-h-screen">
@@ -23,7 +25,7 @@ const App = () => {
               </>
             }
           />
-          <Route path="/admin" element={<Admin emojis={emojis} />} />
+          <Route path="/admin" element={<Admin emojis={adminEmojis} />} />
         </Routes>
         <ToastContainer
           autoClose={3000}

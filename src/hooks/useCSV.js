@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
 
-export default function useCSV() {
+export function useCSV() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -9,12 +9,11 @@ export default function useCSV() {
       const { data: emojis, error } = await supabase
         .from("Emojis_Data")
         .select("*")
-        .eq("active", "TRUE"); // Fetch only active emojis
+        .eq("active", true); // Fetch only active emojis
 
       if (error) {
         console.error("Error fetching emojis:", error);
       } else {
-        console.log("Fetched emojis:", emojis);
         setData(emojis);
       }
     };
@@ -28,13 +27,29 @@ export default function useCSV() {
         { event: "*", schema: "public", table: "Emojis_Data" },
         (payload) => {
           if (payload.eventType === "UPDATE") {
-            setData((prevData) =>
-              prevData.map((emoji) =>
-                emoji.id === payload.new.id ? payload.new : emoji
-              )
-            );
+            setData((prevData) => {
+              const updatedEmoji = payload.new;
+              if (updatedEmoji.active) {
+                // Add or update the emoji if it's active
+                const exists = prevData.some(
+                  (emoji) => emoji.id === updatedEmoji.id
+                );
+                if (exists) {
+                  return prevData.map((emoji) =>
+                    emoji.id === updatedEmoji.id ? updatedEmoji : emoji
+                  );
+                } else {
+                  return [...prevData, updatedEmoji];
+                }
+              } else {
+                // Remove the emoji if it's inactive
+                return prevData.filter((emoji) => emoji.id !== updatedEmoji.id);
+              }
+            });
           } else if (payload.eventType === "INSERT") {
-            setData((prevData) => [...prevData, payload.new]);
+            if (payload.new.active) {
+              setData((prevData) => [...prevData, payload.new]);
+            }
           } else if (payload.eventType === "DELETE") {
             setData((prevData) =>
               prevData.filter((emoji) => emoji.id !== payload.old.id)
@@ -49,5 +64,27 @@ export default function useCSV() {
     };
   }, []);
 
-  return data.filter((emoji) => emoji.active); // Return only active emojis
+  return data.sort((a, b) => a.id - b.id).reverse(); // Sort by id and reverse
+}
+
+export function useAdminEmojis() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchEmojis = async () => {
+      const { data: emojis, error } = await supabase
+        .from("Emojis_Data")
+        .select("*");
+
+      if (error) {
+        console.error("Error fetching emojis for admin:", error);
+      } else {
+        setData(emojis);
+      }
+    };
+
+    fetchEmojis();
+  }, []);
+
+  return data.sort((a, b) => a.id - b.id).reverse(); // Sort by id and reverse
 }

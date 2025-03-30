@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { supabase } from "../supabaseClient";
 
-const EmojiManager = ({ emojis, setEmojis }) => {
+const EmojiManager = ({ emojis }) => {
+  const [localEmojis, setLocalEmojis] = useState(emojis);
+
   const handleToggleEmoji = async (id, currentState) => {
+
     const { error } = await supabase
       .from("Emojis_Data")
       .update({ active: !currentState })
@@ -10,9 +13,15 @@ const EmojiManager = ({ emojis, setEmojis }) => {
 
     if (error) {
       console.error("Error updating emoji state:", error);
+      // Revert the local state if the update fails
+      setLocalEmojis((prevEmojis) =>
+        prevEmojis.map((emoji) =>
+          emoji.id === id ? { ...emoji, active: currentState } : emoji
+        )
+      );
     } else {
-      // Update the local state to reflect the change immediately
-      setEmojis((prevEmojis) =>
+        console.log("Emoji state updated successfully:", id);
+      setLocalEmojis((prevEmojis) =>
         prevEmojis.map((emoji) =>
           emoji.id === id ? { ...emoji, active: !currentState } : emoji
         )
@@ -24,7 +33,7 @@ const EmojiManager = ({ emojis, setEmojis }) => {
     <div>
       <h2 className="text-xl font-bold text-gray-200 mb-4">Manage Emojis</h2>
       <div className="grid grid-cols-4 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-10 gap-10">
-        {emojis.map((emoji) => (
+        {localEmojis.map((emoji) => (
           <div key={emoji.id}>
             <span className="text-4xl">{emoji.emoji}</span>
             <div
@@ -51,7 +60,6 @@ const Admin = ({ emojis }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [emojiList, setEmojiList] = useState(emojis);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -105,7 +113,7 @@ const Admin = ({ emojis }) => {
           </form>
         </div>
       ) : (
-        <EmojiManager emojis={emojiList} setEmojis={setEmojiList} />
+        <EmojiManager emojis={emojis} />
       )}
     </div>
   );
