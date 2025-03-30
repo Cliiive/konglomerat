@@ -23,7 +23,7 @@ const App = () => {
               </>
             }
           />
-          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin" element={<Admin emojis={emojis} />} />
         </Routes>
         <ToastContainer
           autoClose={3000}

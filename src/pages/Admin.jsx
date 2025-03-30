@@ -2,52 +2,56 @@ import React, { useState } from "react";
 import { supabase } from "../supabaseClient";
 
 const EmojiManager = ({ emojis, setEmojis }) => {
-  const handleAddEmoji = () => {
-    const newEmoji = prompt("Enter a new emoji:");
-    if (newEmoji) {
-      setEmojis([...emojis, { id: emojis.length, Emoji: newEmoji }]);
+  const handleToggleEmoji = async (id, currentState) => {
+    const { error } = await supabase
+      .from("Emojis_Data")
+      .update({ active: !currentState })
+      .eq("id", id);
+
+    if (error) {
+      console.error("Error updating emoji state:", error);
+    } else {
+      // Update the local state to reflect the change immediately
+      setEmojis((prevEmojis) =>
+        prevEmojis.map((emoji) =>
+          emoji.id === id ? { ...emoji, active: !currentState } : emoji
+        )
+      );
     }
   };
 
-  const handleRemoveEmoji = (id) => {
-    setEmojis(emojis.filter((emoji) => emoji.id !== id));
-  };
-
   return (
-    <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-full max-w-lg">
+    <div>
       <h2 className="text-xl font-bold text-gray-200 mb-4">Manage Emojis</h2>
-      <ul className="space-y-2">
+      <div className="grid grid-cols-4 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-10 gap-10">
         {emojis.map((emoji) => (
-          <li
-            key={emoji.id}
-            className="flex items-center justify-between bg-gray-700 p-2 rounded-lg"
-          >
-            <span className="text-2xl">{emoji.Emoji}</span>
-            <button
-              className="bg-red-600 text-gray-200 px-2 py-1 rounded-lg hover:bg-red-700"
-              onClick={() => handleRemoveEmoji(emoji.id)}
+          <div key={emoji.id}>
+            <span className="text-4xl">{emoji.emoji}</span>
+            <div
+              className={`relative w-12 h-6 flex items-center rounded-full p-1 cursor-pointer ${
+                emoji.active ? "bg-blue-600" : "bg-gray-400"
+              }`}
+              onClick={() => handleToggleEmoji(emoji.id, emoji.active)}
             >
-              Remove
-            </button>
-          </li>
+              <div
+                className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform ${
+                  emoji.active ? "translate-x-6" : "translate-x-0"
+                }`}
+              ></div>
+            </div>
+          </div>
         ))}
-      </ul>
-      <button
-        className="mt-4 w-full bg-blue-600 text-gray-200 py-2 rounded-lg hover:bg-blue-700"
-        onClick={handleAddEmoji}
-      >
-        Add Emoji
-      </button>
+      </div>
     </div>
   );
 };
 
-const Admin = () => {
+const Admin = ({ emojis }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [emojis, setEmojis] = useState([]);
+  const [emojiList, setEmojiList] = useState(emojis);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -101,7 +105,7 @@ const Admin = () => {
           </form>
         </div>
       ) : (
-        <EmojiManager emojis={emojis} setEmojis={setEmojis} />
+        <EmojiManager emojis={emojiList} setEmojis={setEmojiList} />
       )}
     </div>
   );
