@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import { useCSV, useAdminEmojis } from "./hooks/useCSV";
 import Grid from "./components/Grid";
 import Admin from "./pages/Admin";
@@ -11,7 +11,7 @@ const App = () => {
   const adminEmojis = useAdminEmojis();
 
   return (
-    <Router basename="/konglomerat">
+    <Router>
       <div className="bg-black flex flex-col items-center justify-center min-h-screen">
         <Routes>
           <Route
