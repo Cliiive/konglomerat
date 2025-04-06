@@ -13,6 +13,7 @@ const Tile = ({ id, emoji }) => {
   };
 
   const handleReact = async () => {
+    handleCloseAnimation();
     roomOne.send({
       type: "broadcast",
       event: "emojis",
@@ -25,19 +26,18 @@ const Tile = ({ id, emoji }) => {
 
     if (error) {
       console.error("Error inserting data:", error);
-      toast.error("Da ging leider was schief, versuchs gleich nochmal!", {
+      toast.error("Unfortunately something went wrong, please try again!", {
         position: "top-right",
         autoClose: 2000,
       });
     } else {
       console.log("Data inserted successfully:", data);
       if (navigator.vibrate) navigator.vibrate([100, 50, 100]); // Haptic feedback on success
-      toast.success("Deine Reaktion ist angekommen!", {
+      toast.success("Your reaction has been received!", {
         position: "top-right",
         autoClose: 2000,
       });
     }
-    handleCloseAnimation();
   };
 
   const handleCloseAnimation = () => {
