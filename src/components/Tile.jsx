@@ -69,14 +69,7 @@ const Tile = ({ id, emoji }) => {
             }`}
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the dialog
           >
-            <div className="text-2xl py-5 text-gray-200">This one?</div>
             <div className="text-8xl mb-4 text-gray-200">{emoji}</div>
-            <button
-              className="bg-red-800 text-gray-200 px-4 py-2 m-2 rounded-lg mb-4 p-4 font-bold hover:bg-gray-600"
-              onClick={handleCloseAnimation}
-            >
-              Nah
-            </button>
             <button
               className="bg-abbey-700 text-gray-200 px-4 py-2 m-2 rounded-lg mb-4 p-4 font-bold hover:bg-gray-600"
               onClick={handleReact}
